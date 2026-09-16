@@ -1,36 +1,18 @@
-import ListItem from "./ListItem.jsx";
-import { LI } from "./ListItem.jsx";
+import { useState } from "react";
+import list from "./data/FeedbackData.js";
+import FeedBackList from "./components/FeedBackList.jsx";
+import FeedBackStat from "./components/FeedBackStat.jsx";
+import Header from "./components/Header.jsx";
 
 function App() {
-  const n = 10;
-  const name = "World'!!";
-  const flag = false;
-  const list = [
-    { id: 1, text: "text1" },
-    { id: 2, text: "text2" },
-    { id: 3, text: "text3" },
-    { id: 4, text: "text1" },
-    { id: 5, text: "text2" },
-    { id: 6, text: "text3" },
-  ];
-
+  const [feedbacks] = useState(list);
   return (
     <>
-      {flag ? <>TRUE</> : <>FALSE</>}
-      <div>Hello, World!!</div>
-      <div>Hello, {name} </div>
-      <div>{Math.sqrt(n)}</div>
-      <div>{Math.pow(n, 0.5)}</div>
-      <div>{JSON.stringify(list)}</div>
-      <LI />
-      <ol>
-        {list.map((item, idx) => {
-          return <li key={idx}>{JSON.stringify(item)}</li>;
-        })}
-        <ListItem x={1} y={"2"} text={"text1"} obj={{ k1: "v1", k2: {} }}>
-          <p>вкладення</p>
-        </ListItem>
-      </ol>
+      <Header />
+      <main className="container">
+        <FeedBackStat feedbacks={feedbacks} />
+        <FeedBackList feedbacks={feedbacks} />
+      </main>
     </>
   );
 }
