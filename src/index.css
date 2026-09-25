@@ -198,3 +198,87 @@ input:focus {
         width: 80%;
     }
 }
+
+.feedback-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.close {
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    font-size: 24px;
+    line-height: 1;
+    color: #202142;
+    border-radius: 6px;
+}
+
+.close:hover {
+    background-color: #fce4ec;
+}
+
+.close:focus-visible,
+.feedback-actions .btn:focus-visible {
+    outline: 3px solid #005fcc;
+    outline-offset: 3px;
+}
+.feedback-form {
+    display: grid;
+    gap: 16px;
+}
+
+.form-field {
+    display: grid;
+    gap: 6px;
+}
+
+.form-field label {
+    font-weight: 600;
+}
+
+.feedback-form input,
+.feedback-form select {
+    min-width: 0;
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #777;
+    border-radius: 6px;
+    font: inherit;
+    color: #222;
+    background: #fff;
+}
+
+.feedback-form .rating-select select {
+    width: 100px;
+}
+
+.feedback-form input:focus-visible,
+.feedback-form select:focus-visible,
+.feedback-form button:focus-visible {
+    outline: 3px solid #005fcc;
+    outline-offset: 3px;
+}
+
+.feedback-form input[aria-invalid="true"] {
+    border-color: #a31535;
+}
+
+.form-help {
+    font-size: 14px;
+    color: #555;
+}
+
+.form-error {
+    font-size: 14px;
+    color: #a31535;
+}
+
+@media (max-width: 480px) {
+    .card:has(.feedback-form) {
+        padding: 28px 20px;
+    }
+}

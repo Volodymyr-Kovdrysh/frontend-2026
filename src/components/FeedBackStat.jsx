@@ -5,8 +5,12 @@ const FeedBackStat = ({ feedbacks }) => {
 
   return (
     <section className="feedback-stats" aria-label="Статистика відгуків">
-      <p>Кількість відгуків: <strong>{count}</strong></p>
-      <p>Середня оцінка: <strong>{average}</strong></p>
+      <p>
+        Кількість відгуків: <strong>{count}</strong>
+      </p>
+      <p>
+        Середня оцінка: <strong>{average}</strong>
+      </p>
     </section>
   );
 };
