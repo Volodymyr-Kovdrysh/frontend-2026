@@ -282,3 +282,60 @@ input:focus {
         padding: 28px 20px;
     }
 }
+
+rating-group {
+    min-width: 0;
+    border: 0;
+}
+
+.rating-group legend {
+    font-weight: 600;
+}
+
+.rating-group .rating {
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 16px 0;
+}
+
+.rating input[type="radio"] {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    border: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
+.rating input[type="radio"]:focus-visible + label {
+    outline: 3px solid #005fcc;
+    outline-offset: 3px;
+}
+
+.card:has(> .edit) {
+    padding-top: 56px;
+}
+
+.edit {
+    right: 60px;
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    font-size: 22px;
+    line-height: 1;
+    color: #202142;
+    border-radius: 6px;
+}
+
+.edit:hover {
+    background-color: #e8eefb;
+}
+
+.edit:focus-visible {
+    outline: 3px solid #005fcc;
+    outline-offset: 3px;
+}
+

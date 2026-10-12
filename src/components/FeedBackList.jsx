@@ -1,5 +1,5 @@
 import FeedBackItem from "./FeedBackItem.jsx";
-const FeedBackList = ({ feedbacks, onDelete }) => {
+const FeedBackList = ({ feedbacks, onDelete, onEdit }) => {
   if (feedbacks.length === 0) {
     return <p className="empty-message">Відгуків ще немає.</p>;
   }
@@ -7,7 +7,14 @@ const FeedBackList = ({ feedbacks, onDelete }) => {
   return (
     <>
       {feedbacks.map((fb) => {
-        return <FeedBackItem key={fb.id} feedback={fb} onDelete={onDelete} />;
+        return (
+          <FeedBackItem
+            key={fb.id}
+            onEdit={onEdit}
+            feedback={fb}
+            onDelete={onDelete}
+          />
+        );
       })}
     </>
   );

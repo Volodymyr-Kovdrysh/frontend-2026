@@ -1,8 +1,17 @@
 import Card from "../shared/Card.jsx";
 
-const FeedBackItem = ({ feedback, onDelete }) => {
+const FeedBackItem = ({ feedback, onDelete, onEdit }) => {
   return (
     <Card>
+      <button
+        type="button"
+        className="edit"
+        aria-label={`Редагувати відгук: ${feedback.text}`}
+        title="Редагувати"
+        onClick={() => onEdit(feedback.id)}
+      >
+        ✎
+      </button>
       <button
         type="button"
         className="close"
