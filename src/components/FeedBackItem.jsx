@@ -1,6 +1,10 @@
+import { useContext } from "react";
+import FeedbackContext from "../context/FeedbackContext.jsx";
 import Card from "../shared/Card.jsx";
 
-const FeedBackItem = ({ feedback, onDelete, onEdit }) => {
+const FeedBackItem = ({ feedback }) => {
+  const { handleDelete, selectFeedback } = useContext(FeedbackContext);
+
   return (
     <Card>
       <button
@@ -8,7 +12,7 @@ const FeedBackItem = ({ feedback, onDelete, onEdit }) => {
         className="edit"
         aria-label={`Редагувати відгук: ${feedback.text}`}
         title="Редагувати"
-        onClick={() => onEdit(feedback.id)}
+        onClick={() => selectFeedback(feedback.id)}
       >
         ✎
       </button>
@@ -17,7 +21,7 @@ const FeedBackItem = ({ feedback, onDelete, onEdit }) => {
         className="close"
         aria-label={`Видалити відгук: ${feedback.text}`}
         onClick={() => {
-          onDelete(feedback.id);
+          handleDelete(feedback.id);
         }}
       >
         ×

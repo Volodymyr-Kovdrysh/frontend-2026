@@ -283,7 +283,7 @@ input:focus {
     }
 }
 
-rating-group {
+.rating-group {
     min-width: 0;
     border: 0;
 }

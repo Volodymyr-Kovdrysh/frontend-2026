@@ -48,9 +48,7 @@ const FeedBackForm = ({ onAdd, feedback, onCancel, onUpdate }) => {
             ? "Введіть щонайменше 10 символів без пробілів на початку й у кінці."
             : "Мінімум 10 символів. Пробіли на початку й у кінці не враховуються."}
         </p>
-        {isEditing && (
-          <p className="form-help">Збереження додамо на наступному кроці </p>
-        )}
+
         <div className="feedback-actions">
           <button type="submit" className="btn btn-primary" disabled={!isValid}>
             {isEditing ? "Зберегти" : "Додати"}
@@ -64,7 +62,7 @@ const FeedBackForm = ({ onAdd, feedback, onCancel, onUpdate }) => {
               Скасувати
             </button>
           )}
-        </div>{" "}
+        </div>
       </form>
     </Card>
   );

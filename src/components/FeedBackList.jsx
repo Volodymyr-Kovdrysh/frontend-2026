@@ -1,5 +1,8 @@
+import { useContext } from "react";
+import FeedbackContext from "../context/FeedbackContext.jsx";
 import FeedBackItem from "./FeedBackItem.jsx";
-const FeedBackList = ({ feedbacks, onDelete, onEdit }) => {
+const FeedBackList = () => {
+  const { feedbacks } = useContext(FeedbackContext);
   if (feedbacks.length === 0) {
     return <p className="empty-message">Відгуків ще немає.</p>;
   }
@@ -7,14 +10,7 @@ const FeedBackList = ({ feedbacks, onDelete, onEdit }) => {
   return (
     <>
       {feedbacks.map((fb) => {
-        return (
-          <FeedBackItem
-            key={fb.id}
-            onEdit={onEdit}
-            feedback={fb}
-            onDelete={onDelete}
-          />
-        );
+        return <FeedBackItem key={fb.id} feedback={fb} />;
       })}
     </>
   );

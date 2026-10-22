@@ -1,4 +1,9 @@
-const FeedBackStat = ({ feedbacks }) => {
+import { useContext } from "react";
+import FeedbackContext from "../context/FeedbackContext";
+
+const FeedBackStat = () => {
+  const { feedbacks } = useContext(FeedbackContext);
+
   const count = feedbacks.length;
   const total = feedbacks.reduce((sum, feedback) => sum + feedback.rating, 0);
   const average = count > 0 ? (total / count).toFixed(1) : "—";

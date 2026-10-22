@@ -1,51 +1,15 @@
-import { useState } from "react";
-import { v4 as uuidv4 } from "uuid";
-import list from "./data/FeedbackData.js";
+import { useContext } from "react";
+import FeedbackContext from "./context/FeedbackContext.jsx";
 import FeedBackList from "./components/FeedBackList.jsx";
 import FeedBackStat from "./components/FeedBackStat.jsx";
 import Header from "./components/Header.jsx";
-import FeedBackForm from "./components/FeedBackForm.jsx";
+import FeedBackFormSection from "./components/FeedbackFormSection.jsx";
+import FeedBackProvider from "./context/FeedBackProvider.jsx";
 
-function App() {
-  const [feedbacks, setFeedbacks] = useState(list);
-  const [editingId, setEditingId] = useState(null);
+function FeedBackContent() {
+  const { editingFeedback, cancelEdit, clearFeedbacks, resetFeedbacks } =
+    useContext(FeedbackContext);
 
-  const editingFeedback =
-    feedbacks.find((feedback) => feedback.id === editingId) ?? null;
-
-  const cencelEdit = () => setEditingId(null);
-
-  const addFeedBack = (newFeedback) => {
-    const feedback = { ...newFeedback, id: uuidv4() };
-    setFeedbacks((prev) => [...prev, feedback]);
-  };
-
-  const updateFeedback = (id, changes) => {
-    setFeedbacks((prevFeedbacks) =>
-      prevFeedbacks.map((feedback) =>
-        feedback.id === id
-          ? { ...feedback, ...changes, id: feedback.id }
-          : feedback,
-      ),
-    );
-    setEditingId(null);
-  };
-
-  const handleDelete = (id) => {
-    if (!window.confirm("Видалити цей відгук??")) {
-      return;
-    }
-    setFeedbacks((prev) => prev.filter((obj) => obj.id !== id));
-  };
-  const clearFeedbacks = () => {
-    if (!window.confirm("Очистити всі відгуки?")) {
-      return;
-    }
-    setFeedbacks([]);
-  };
-  const resetFeedbacks = () => {
-    setFeedbacks(list);
-  };
   return (
     <>
       <Header />
@@ -76,28 +40,26 @@ function App() {
             <button
               type="button"
               className="btn btn-secondary"
-              onClick={cencelEdit}
+              onClick={cancelEdit}
             >
               Закенсилити
             </button>
           </p>
         )}
 
-        <FeedBackForm
-          key={editingFeedback?.id ?? "new"}
-          feedback={editingFeedback}
-          onAdd={addFeedBack}
-          onCancel={cencelEdit}
-          onUpdate={updateFeedback}
-        />
-        <FeedBackStat feedbacks={feedbacks} />
-        <FeedBackList
-          feedbacks={feedbacks}
-          onDelete={handleDelete}
-          onEdit={setEditingId}
-        />
+        <FeedBackFormSection />
+        <FeedBackStat />
+        <FeedBackList />
       </main>
     </>
+  );
+}
+
+function App() {
+  return (
+    <FeedBackProvider>
+      <FeedBackContent />
+    </FeedBackProvider>
   );
 }
 
