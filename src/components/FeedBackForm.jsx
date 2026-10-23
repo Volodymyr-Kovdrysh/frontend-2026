@@ -28,7 +28,7 @@ const FeedBackForm = ({ onAdd, feedback, onCancel, onUpdate }) => {
   return (
     <Card>
       <form className="feedback-form" onSubmit={handleSubmit}>
-        <h2>Новий відгук</h2>
+        <h2>{isEditing ? "Редагування відгуку" : "Новий відгук"}</h2>
         <div className="form-field">
           <label htmlFor="feedback-text">Текст відгуку</label>
           <input

@@ -338,4 +338,7 @@ input:focus {
     outline: 3px solid #005fcc;
     outline-offset: 3px;
 }
-
+.route-nav { display: flex; flex-wrap: wrap; gap: 1rem; margin-block: 1rem; }
+.route-nav a { color: inherit; padding: 0.35rem 0.6rem; border-radius: 0.3rem; }
+.route-nav a.active { background: #183153; color: white; font-weight: 700; }
+.route-nav a:focus-visible { outline: 3px solid #1677c8; outline-offset: 3px; }
