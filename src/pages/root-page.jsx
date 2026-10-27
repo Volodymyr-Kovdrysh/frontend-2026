@@ -9,6 +9,7 @@ function RootPage() {
           Відгуки
         </NavLink>
         <NavLink to="/about">Про застосунок</NavLink>
+        <NavLink to="/params/7/React">Параметри</NavLink>
       </nav>
       <Outlet />
     </>
