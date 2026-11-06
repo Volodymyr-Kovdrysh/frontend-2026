@@ -11,14 +11,14 @@ function FeedBackActions() {
         className="btn btn-primary"
         onClick={clearFeedbacks}
       >
-        Очистити
+        Очистити на сервері
       </button>
       <button
         type="button"
         className="btn btn-secondary"
         onClick={resetFeedbacks}
       >
-        Відновити
+        Відновити приклади на сервері
       </button>
     </div>
   );

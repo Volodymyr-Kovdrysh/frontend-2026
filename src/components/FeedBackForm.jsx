@@ -11,19 +11,21 @@ const FeedBackForm = ({ onAdd, feedback, onCancel, onUpdate }) => {
   const isValid = trimedText.length >= 10;
   const showError = text.length > 0 && !isValid;
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     if (!isValid) {
       return;
     }
     const changes = { text, rating };
     if (isEditing) {
-      onUpdate(feedback.id, changes);
+      await onUpdate(feedback.id, changes);
       return;
     }
 
-    onAdd({ text, rating });
-    setText("");
+    const saved = await onAdd({ text, rating });
+    if (saved) {
+      setText("");
+    }
   };
   return (
     <Card>

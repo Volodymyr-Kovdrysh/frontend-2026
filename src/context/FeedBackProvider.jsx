@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import list from "../data/FeedbackData.js";
 import FeedbackContext from "./FeedbackContext.jsx";
-import { requestFeedback } from "../api/feedbackApi.js";
+import { requestFeedback, jsonOptions } from "../api/feedbackApi.js";
 
 function FeedBackProvider({ children }) {
   const [feedbacks, setFeedbacks] = useState([]);
@@ -11,9 +11,9 @@ function FeedBackProvider({ children }) {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
   const [reloadKey, setReloadKey] = useState(0);
-  const isReadOnly = true;
-  const isSaving = false;
-  const bulkReady = false;
+  const isReadOnly = false;
+  const [isSaving, setIsSaving] = useState(false);
+  const bulkReady = true;
 
   const reloadFeedbacks = () => {
     setIsLoading(true);
@@ -26,7 +26,9 @@ function FeedBackProvider({ children }) {
       try {
         const data = await requestFeedback();
         setFeedbacks(data);
-        setEditingId((id) => data.some((feedback) => feedback.id === id) ? id : null);
+        setEditingId((id) =>
+          data.some((feedback) => feedback.id === id) ? id : null,
+        );
       } catch (error) {
         setError(error.message);
       } finally {
@@ -36,47 +38,106 @@ function FeedBackProvider({ children }) {
     loadFeedbacks();
   }, [reloadKey]);
 
-
   const editingFeedback =
     feedbacks.find((feedback) => feedback.id === editingId) ?? null;
   const selectFeedback = (id) => setEditingId(id);
   const cancelEdit = () => setEditingId(null);
 
-  const addFeedBack = (newFeedback) => {
-    const feedback = { ...newFeedback, id: uuidv4() };
-    setFeedbacks((prev) => [...prev, feedback]);
-  };
-
-  const updateFeedback = (id, changes) => {
-    setFeedbacks((prevFeedbacks) =>
-      prevFeedbacks.map((feedback) =>
-        feedback.id === id
-          ? { ...feedback, ...changes, id: feedback.id }
-          : feedback,
-      ),
-    );
-    setEditingId(null);
-  };
-
-  const handleDelete = (id) => {
-    if (!window.confirm("Видалити цей відгук??")) {
-      return;
+  const runMutation = async (task) => {
+    if (isSaving || isLoading) return false;
+    setIsSaving(true);
+    setError("");
+    try {
+      await task();
+      return true;
+    } catch (error) {
+      setError(error.message);
+      return false;
+    } finally {
+      setIsSaving(false);
     }
-    setFeedbacks((prev) => prev.filter((obj) => obj.id !== id));
-    if (editingId === id) {
+  };
+
+  const addFeedBack = (newFeedback) =>
+    runMutation(async () => {
+      const saved = await requestFeedback(
+        "",
+        jsonOptions("POST", {
+          ...newFeedback,
+          id: uuidv4(),
+        }),
+      );
+      setFeedbacks((prev) => [...prev, saved]);
+    });
+
+  const updateFeedback = (id, changes) =>
+    runMutation(async () => {
+      const current = feedbacks.find((feedback) => feedback.id === id);
+      const saved = await requestFeedback(
+        `/${encodeURIComponent(id)}`,
+        jsonOptions("PUT", { ...current, ...changes, id }),
+      );
+      setFeedbacks((prev) =>
+        prev.map((feedback) => (feedback.id === id ? saved : feedback)),
+      );
       setEditingId(null);
-    }
+    });
+
+  const handleDelete = async (id) => {
+    if (!window.confirm("Видалити цей відгук??")) return false;
+    return runMutation(async () => {
+      await requestFeedback(`/${encodeURIComponent(id)}`, { method: "DELETE" });
+      setFeedbacks((prev) => prev.filter((feedback) => feedback.id !== id));
+      if (editingId === id) setEditingId(null);
+    });
   };
-  const clearFeedbacks = () => {
-    if (!window.confirm("Очистити всі відгуки?")) {
-      return;
-    }
-    setFeedbacks([]);
-    setEditingId(null);
+
+  const clearFeedbacks = async () => {
+    if (!window.confirm("Видалити всі відгуки із сервера?")) return false;
+    return runMutation(async () => {
+      try {
+        const current = await requestFeedback();
+        for (const feedback of current) {
+          await requestFeedback(`/${encodeURIComponent(feedback.id)}`, {
+            method: "DELETE",
+          });
+        }
+        setFeedbacks([]);
+        setEditingId(null);
+      } finally {
+        setIsLoading(true);
+        setReloadKey((key) => key + 1);
+      }
+    });
   };
-  const resetFeedbacks = () => {
-    setFeedbacks(list);
-    setEditingId(null);
+
+  const resetFeedbacks = async () => {
+    if (
+      !window.confirm(
+        "Замінити серверний список трьома початковими прикладами?",
+      )
+    )
+      return false;
+    return runMutation(async () => {
+      try {
+        const current = await requestFeedback();
+        for (const feedback of current) {
+          await requestFeedback(`/${encodeURIComponent(feedback.id)}`, {
+            method: "DELETE",
+          });
+        }
+        for (const feedback of list) {
+          await requestFeedback(
+            "",
+            jsonOptions("POST", { ...feedback, id: String(feedback.id) }),
+          );
+        }
+        setEditingId(null);
+      } finally {
+        setIsLoading(true);
+        setReloadKey((key) => key + 1);
+      }
+    });
   };
 
   return (
