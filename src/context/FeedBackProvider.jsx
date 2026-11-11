@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 import list from "../data/FeedbackData.js";
 import FeedbackContext from "./FeedbackContext.jsx";
 import { requestFeedback, jsonOptions } from "../api/feedbackApi.js";
+import getDataFromGoogleAppScripts from "../data/Utils.js";
 
 function FeedBackProvider({ children }) {
   const [feedbacks, setFeedbacks] = useState([]);
@@ -11,9 +12,9 @@ function FeedBackProvider({ children }) {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
   const [reloadKey, setReloadKey] = useState(0);
-  const isReadOnly = false;
+  const isReadOnly = true;
   const [isSaving, setIsSaving] = useState(false);
-  const bulkReady = true;
+  const bulkReady = false;
 
   const reloadFeedbacks = () => {
     setIsLoading(true);
@@ -24,10 +25,12 @@ function FeedBackProvider({ children }) {
   useEffect(() => {
     async function loadFeedbacks() {
       try {
-        const data = await requestFeedback();
-        setFeedbacks(data);
+        const data = await getDataFromGoogleAppScripts(
+          `${import.meta.env.VITE_gasURL}?method=GET`,
+        );
+        setFeedbacks(data.feedbacks);
         setEditingId((id) =>
-          data.some((feedback) => feedback.id === id) ? id : null,
+          data.feedbacks.some((feedback) => feedback.id === id) ? id : null,
         );
       } catch (error) {
         setError(error.message);
